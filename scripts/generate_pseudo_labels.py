@@ -70,8 +70,8 @@ def main(
         jnd_idx = np.where(kmeans.labels_ == kmeans.labels_[-1])[0][0]
 
         jnd_scales.append(candidate_scale[jnd_idx].item())
-        SD_feats.append(feats[1])
-        CN_feats.append(feats[0])
+        SD_feats.append(torch.cat([layer.norm().unsqueeze(0) for layer in feats[1]]))
+        CN_feats.append(torch.cat([layer.norm().unsqueeze(0) for layer in feats[0]]))
     
     os.makedirs(output_directory, exist_ok=True)
     torch.save(
