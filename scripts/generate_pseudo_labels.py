@@ -26,7 +26,7 @@ def main(
     guidance_scale
 ):
     # Initialize the model and dataset
-    model = SDControlNetModel()
+    model = SDControlNetModel(device=device)
     dataset = ObjectRender(data_directory, prompt_directory)
 
     SD_feats = []
@@ -41,7 +41,7 @@ def main(
         data_idx = np.random.randint(len(dataset))
         image, visual_prompt, text_prompt, negative_text_prompt, path = dataset[data_idx]
         image = image.unsqueeze(0).to(device, torch.float32)
-        visual_prompt = visual_prompt.unsqueeze(0).to(device, torch.float32)/255
+        visual_prompt = visual_prompt.unsqueeze(0).to(device, torch.float32)
         candidate_scale = torch.arange(min_scale, max_scale + step_size / 2, step_size)
         sample_seed = np.random.randint(0, 1000)
 
@@ -70,8 +70,8 @@ def main(
         jnd_idx = np.where(kmeans.labels_ == kmeans.labels_[-1])[0][0]
 
         jnd_scales.append(candidate_scale[jnd_idx].item())
-        SD_feats.append(torch.cat([layer.norm().unsqueeze(0) for layer in feats[1]]))
         CN_feats.append(torch.cat([layer.norm().unsqueeze(0) for layer in feats[0]]))
+        SD_feats.append(torch.cat([layer.norm().unsqueeze(0) for layer in feats[1]]))
     
     os.makedirs(output_directory, exist_ok=True)
     torch.save(

@@ -7,13 +7,27 @@ import torch
 from torch.utils.data import Dataset
 from torchvision.transforms import ToTensor
 
+from ac3s.utils import generate_edge
 
-def generate_edge(image, canny_lower=100, canny_upper=200):
-    edges = cv2.Canny(image, canny_lower, canny_upper)/255
-    edges = edges[None, :, :]
-    edges = np.concatenate([edges, edges, edges], axis=0)
-    return torch.from_numpy(edges)
-    
+class ModulatorDataset(Dataset):
+    def __init__(self, data_file):
+        self.magnitudes = []
+        self.conditioning_scales = []
+
+        data = torch.load(data_file)
+        for CN_feats, SD_feats, jnd_scale in zip(data["CN_feats"], data["SD_feats"], data["jnd_scale"]):
+            self.magnitudes.append(torch.cat([CN_feats, SD_feats]))
+            self.conditioning_scales.append(jnd_scale)
+
+        self.magnitudes = torch.stack(self.magnitudes)
+        self.conditioning_scales = torch.tensor(self.conditioning_scales).unsqueeze(1)
+
+    def __len__(self):
+        return len(self.magnitudes)
+
+    def __getitem__(self, idx):
+        return self.magnitudes[idx], self.conditioning_scales[idx]
+
 class ObjectRender(Dataset):
     def __init__(self, data_directory, prompts_directory, synsets=None):
         if synsets is None or len(synsets) == 0:
