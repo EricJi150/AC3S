@@ -81,10 +81,10 @@ def main(
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--data_directory", type=str, required=True, help="Path to renders directory")
-    parser.add_argument("--prompts_directory", type=str, required=True, help="Path to prompts directory")
-    parser.add_argument("--output_directory", type=str, required=True, help="Directory to save output .pt file in")
-    parser.add_argument("--output_filename", type=str, required=True, help="Filename to save data as")
+    parser.add_argument("--data_dir", type=str, required=True, help="Path to renders directory")
+    parser.add_argument("--prompts_dir", type=str, required=True, help="Path to prompts directory")
+    parser.add_argument("--output_dir", type=str, default="data", help="Directory to save output .pt file in")
+    parser.add_argument("--output_name", type=str, default="modulator_data", help="Filename to save data as")
     parser.add_argument("--num_samples", type=int, default=1000, help="Number of samples to collect")
     parser.add_argument("--device", type=str, default="cuda", help="Device to run generation on")
     parser.add_argument("--min_scale", type=float, default=0.3, help="Minimum conditioning scale to sweep")
@@ -97,10 +97,10 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     main(
-        args.data_directory,
-        args.prompts_directory,
-        args.output_directory,
-        args.output_filename,
+        args.data_dir,
+        args.prompts_dir,
+        args.output_dir,
+        args.output_name,
         args.num_samples,
         args.device,
         args.min_scale,
