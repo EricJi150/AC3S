@@ -9,6 +9,8 @@ The full generated synthetic dataset will be released soon.
 ## Setup
 
 ```bash
+conda create -n ac3s python=3.10 -y
+conda activate ac3s
 pip install -e .
 pip install -r requirements.txt
 ```
