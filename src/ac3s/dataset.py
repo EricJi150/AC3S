@@ -71,7 +71,7 @@ class ObjectRender(Dataset):
         path = self.paths[idx]
         return image, edge_image, positive_prompt, negative_prompt, path
 
-class FilteringDataset(Dataset):
+class ObjectRenderSyntheticImage(Dataset):
     def __init__(self, data_directory, synsets=None):
         if synsets is None or len(synsets) == 0:
             synsets = os.listdir(os.path.join(data_directory))
